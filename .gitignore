@@ -16,6 +16,12 @@ CLAUDE.md
 docs/
 *.local.md
 
+# internal security + working docs (keep private)
+# public README.md and INTERFACE.md stay tracked
+SECURITY-SWEEP.md
+/docs/
+*.private.md
+
 # editor / os
 .DS_Store
 .idea/
