@@ -1,0 +1,23 @@
+# deps + build
+node_modules/
+dist/
+.next/
+out/
+*.tsbuildinfo
+
+# env + secrets
+.env
+.env.*
+!.env.example
+
+# claude working files + project docs (keep private)
+.claude/
+CLAUDE.md
+docs/
+*.local.md
+
+# editor / os
+.DS_Store
+.idea/
+.vscode/
+*.log

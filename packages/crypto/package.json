@@ -1,0 +1,48 @@
+{
+  "name": "@envsafe/crypto",
+  "version": "0.1.0",
+  "description": "Frozen client-side crypto core for envsafe. AES-GCM-256 with a versioned envelope, zero runtime dependencies, pure WebCrypto.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "INTERFACE.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "node --test test/*.test.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "encryption",
+    "aes-gcm",
+    "webcrypto",
+    "end-to-end-encryption",
+    "zero-knowledge",
+    "secrets"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slashr00t/envsafe-crypto.git",
+    "directory": "packages/crypto"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}
