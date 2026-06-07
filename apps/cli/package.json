@@ -1,8 +1,44 @@
 {
   "name": "@envsafe/cli",
-  "version": "0.0.0",
-  "private": true,
-  "description": "envsafe command line tool. Placeholder, not implemented yet.",
+  "version": "0.1.0",
+  "description": "envsafe command line tool. Encrypts secrets locally with @envsafe/crypto and prints a one-time share link. The key lives only in the link fragment, never in the request.",
   "license": "Apache-2.0",
-  "type": "module"
+  "type": "module",
+  "bin": {
+    "envsafe": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && chmod +x dist/cli.js",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "node --test test/*.test.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "encryption",
+    "cli",
+    "secrets",
+    "end-to-end-encryption",
+    "zero-knowledge",
+    "envsafe"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slashr00t/envsafe-crypto.git",
+    "directory": "apps/cli"
+  },
+  "dependencies": {
+    "@envsafe/crypto": "0.1.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
 }
