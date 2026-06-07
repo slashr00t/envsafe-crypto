@@ -1,0 +1,67 @@
+# Publish @envsafe/crypto to npm with provenance via Trusted Publishing (OIDC).
+#
+# How to cut a release of @envsafe/crypto
+#
+#   1. Bump the version in packages/crypto/package.json (for example 0.1.0 -> 0.1.1).
+#   2. Commit the bump:   git commit -am "release: @envsafe/crypto vX.Y.Z"
+#   3. Tag the release:   git tag crypto-vX.Y.Z
+#   4. Push the tag:      git push origin crypto-vX.Y.Z
+#
+# Pushing a crypto-v* tag triggers this workflow. It builds the package, runs the
+# test suite, and only then publishes. If the tests fail the publish never runs,
+# so a broken build can never ship. The published version is the one in
+# packages/crypto/package.json, so keep the tag and that version in step.
+#
+# The crypto-v prefix is specific to this package. The CLI can use its own prefix
+# later (for example cli-v) without colliding with crypto releases.
+#
+# Auth: this uses npm Trusted Publishing. The id-token: write permission lets the
+# runner mint a short lived OIDC identity that npm trusts, so provenance is
+# attached and there is no long lived NPM_TOKEN or NODE_AUTH_TOKEN anywhere.
+#
+# One time setup on npmjs.com: configure a Trusted Publisher for @envsafe/crypto
+# that points at this repository and this workflow file
+# (.github/workflows/publish.yml). Without that link npm rejects the OIDC publish.
+
+name: publish-crypto
+
+on:
+  push:
+    tags:
+      - "crypto-v*"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    name: build, test and publish @envsafe/crypto
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      # Trusted Publishing needs a recent npm. Upgrade before publishing.
+      - name: Upgrade npm
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build crypto
+        run: npm run build --workspace @envsafe/crypto
+
+      # Gate: a failing suite fails the job before publish runs.
+      - name: Test crypto
+        run: npm test --workspace @envsafe/crypto
+
+      - name: Publish to npm with provenance
+        working-directory: packages/crypto
+        run: npm publish --provenance --access public
